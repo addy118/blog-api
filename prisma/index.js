@@ -1,8 +1,14 @@
 const db = require("../config/prismaClient");
 
 const main = async () => {
-  const data = await db.post.findFirst({});
-  console.log(data);
+  const entity = await db.user.findUnique({
+    where: {
+      email: "addy@test.com",
+    },
+  });
+  console.log(entity);
+
+  // await db.user.deleteMany();
 };
 
 main();
