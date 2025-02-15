@@ -1,7 +1,7 @@
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
-const User = require("../prisma/Models/User");
 const jwt = require("jsonwebtoken");
+const User = require("../prisma/queries/User");
 const { SECRET } = process.env;
 
 exports.postSignup = async (req, res) => {
