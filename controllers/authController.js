@@ -15,7 +15,7 @@ exports.postSignup = async (req, res) => {
 
 exports.postLogin = async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.find(email);
+  const user = await User.getByEmail(email);
 
   if (!user) return res.status(404).send("User not found!");
 
@@ -35,9 +35,9 @@ exports.verifyToken = (req, res, next) => {
   req.token = authToken;
 
   // verify the token and add user to the request
-  jwt.verify(req.token, SECRET, (err, user) => {
+  jwt.verify(req.token, SECRET, (err, data) => {
     if (err) return res.sendStatus(403);
-    req.user = user;
+    req.user = data.user;
   });
 
   next();

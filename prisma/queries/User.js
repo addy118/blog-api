@@ -9,7 +9,15 @@ class User {
     return user;
   }
 
-  static async find(email) {
+  static async getById(id) {
+    const user = await db.user.findUnique({
+      where: { id },
+    });
+
+    return user;
+  }
+
+  static async getByEmail(email) {
     const user = await db.user.findUnique({
       where: { email },
     });
