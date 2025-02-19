@@ -10,7 +10,7 @@ const commentRouter = Router();
 commentRouter.use(verifyToken);
 
 commentRouter.post("/post/:postId/new", postComment);
-commentRouter.post("/:commentId/reply", postReply);
+commentRouter.post("/:commentId/post/:postId/reply", postReply);
 
 commentRouter.delete("/:commentId/delete", delComment);
 

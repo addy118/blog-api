@@ -8,19 +8,22 @@ const {
   putPostPub,
   delPost,
 } = require("../controllers/postController");
-const { verifyToken } = require("../controllers/authController");
+const {
+  verifyToken,
+  verifyPostship,
+} = require("../controllers/authController");
 const postRouter = Router();
 
 postRouter.get("/", getPosts);
 
-postRouter.use(verifyToken);
+postRouter.use("/:postId/*", [verifyToken, verifyPostship]);
 
 postRouter.put("/:postId/title", putPostTitle);
 postRouter.put("/:postId/body", putPostBody);
 postRouter.put("/:postId/archive", putPostArch);
 postRouter.put("/:postId/publish", putPostPub);
 
-postRouter.post("/new", postPost);
+postRouter.post("/new", verifyToken, postPost);
 
 postRouter.delete("/:postId/delete", delPost);
 
