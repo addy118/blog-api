@@ -20,7 +20,7 @@ exports.putPostArch = async (req, res) => {
 
   try {
     await Post.archive(Number(postId));
-    res.status(204).json({ msg: "Post archived successfully" });
+    res.status(200).json({ msg: "Post archived successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -31,7 +31,7 @@ exports.putPostPub = async (req, res) => {
 
   try {
     await Post.publish(Number(postId));
-    res.status(204).json({ msg: "Post published successfully" });
+    res.status(200).json({ msg: "Post published successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -43,7 +43,7 @@ exports.putPostTitle = async (req, res) => {
 
   try {
     await Post.editTitle(Number(postId), title);
-    res.status(204).json({ msg: "Post title edited successfully" });
+    res.status(200).json({ msg: "Post title edited successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -55,7 +55,7 @@ exports.putPostBody = async (req, res) => {
 
   try {
     await Post.editBody(Number(postId), body);
-    res.status(204).json({ msg: "Post body edited successfully" });
+    res.status(200).json({ msg: "Post body edited successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -66,7 +66,7 @@ exports.delPost = async (req, res) => {
 
   try {
     await Post.delete(Number(postId));
-    res.status(204).json({ msg: "Post deleted successfully" });
+    res.status(200).json({ msg: "Post deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

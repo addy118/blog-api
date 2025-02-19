@@ -55,9 +55,9 @@ exports.verifyOwnership = (req, res, next) => {
 exports.verifyPostship = async (req, res, next) => {
   const postId = Number(req.params.postId);
   // post belongs to the user?
-  const posts = await Post.getPostsByUser(req.user.id);
+  const posts = await Post.getAllPostsByUser(req.user.id);
   const matched = posts.find((post) => post.id === postId);
-  
+
   if (!matched)
     return res.status(403).json({ msg: "You don't have access rights" });
 

@@ -73,7 +73,20 @@ class Post {
 
   static async getPostsByUser(userId) {
     try {
-      return await db.post.findMany({ where: { authorId: userId } });
+      return await db.post.findMany({
+        where: { authorId: userId, isPublished: true },
+      });
+    } catch (error) {
+      console.error("Error fetching user posts:  ", error.stack);
+      throw new Error("Failed to fetch user posts.");
+    }
+  }
+
+  static async getAllPostsByUser(userId) {
+    try {
+      return await db.post.findMany({
+        where: { authorId: userId },
+      });
     } catch (error) {
       console.error("Error fetching user posts:  ", error.stack);
       throw new Error("Failed to fetch user posts.");
@@ -94,7 +107,7 @@ class Post {
   static async getPostById(postId) {
     try {
       return await db.post.findUnique({
-        where: { id: postId },
+        where: { id: postId, isPublished: true },
         include: {
           author: true,
           comments: { include: { replies: true } },
