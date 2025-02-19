@@ -1,4 +1,6 @@
+const { post } = require("../config/prismaClient");
 const Post = require("../prisma/queries/Post");
+const User = require("../prisma/queries/User");
 
 exports.getPosts = async (req, res) => {
   // retrieve posts from database
@@ -8,18 +10,64 @@ exports.getPosts = async (req, res) => {
 
 exports.postPost = async (req, res) => {
   const { title, body } = req.body;
-  const userId = req.user.id;
 
-  await Post.create(title, body, userId);
+  await Post.create(title, body, req.user.id);
   res.send("Post created successfully!");
 };
 
-exports.putPostArch = async (req, res) => {};
+exports.putPostArch = async (req, res) => {
+  const { postId } = req.params;
 
-exports.putPostPub = async (req, res) => {};
+  try {
+    await Post.archive(Number(postId));
+    res.status(204).json({ msg: "Post archived successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
-exports.putPostTitle = async (req, res) => {};
+exports.putPostPub = async (req, res) => {
+  const { postId } = req.params;
 
-exports.putPostBody = async (req, res) => {};
+  try {
+    await Post.publish(Number(postId));
+    res.status(204).json({ msg: "Post published successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
-exports.delPost = async (req, res) => {};
+exports.putPostTitle = async (req, res) => {
+  const { postId } = req.params;
+  const { title } = req.body;
+
+  try {
+    await Post.editTitle(Number(postId), title);
+    res.status(204).json({ msg: "Post title edited successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.putPostBody = async (req, res) => {
+  const { postId } = req.params;
+  const { body } = req.body;
+
+  try {
+    await Post.editBody(Number(postId), body);
+    res.status(204).json({ msg: "Post body edited successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.delPost = async (req, res) => {
+  const { postId } = req.params;
+
+  try {
+    await Post.delete(Number(postId));
+    res.status(204).json({ msg: "Post deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

@@ -2,6 +2,7 @@ require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../prisma/queries/User");
+const Post = require("../prisma/queries/Post");
 const { SECRET } = process.env;
 
 exports.postSignup = async (req, res) => {
@@ -49,6 +50,15 @@ exports.verifyOwnership = (req, res, next) => {
     return res.status(403).json({ msg: "You don't have access rights" });
 
   next();
+};
+
+exports.verifyPostship = async (req, res, next) => {
+  const postId = Number(req.params.postId);
+  // post belongs to the user?
+  const posts = await Post.getPostsByUser(req.user.id);
+  const matched = posts.find((post) => post.id === postId);
+  if (!matched)
+    return res.status(403).json({ msg: "You don't have access rights" });
 };
 
 // exports.getProtection = (req, res) => res.send("You're authorized!");

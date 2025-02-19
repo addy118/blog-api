@@ -36,7 +36,7 @@ class Post {
     }
   }
 
-  static async archivePost(postId) {
+  static async archive(postId) {
     try {
       await db.post.update({
         where: { id: postId },
@@ -48,7 +48,7 @@ class Post {
     }
   }
 
-  static async unarchivePost(postId) {
+  static async publish(postId) {
     try {
       await db.post.update({
         where: { id: postId },
