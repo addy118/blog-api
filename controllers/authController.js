@@ -57,8 +57,23 @@ exports.verifyPostship = async (req, res, next) => {
   // post belongs to the user?
   const posts = await Post.getPostsByUser(req.user.id);
   const matched = posts.find((post) => post.id === postId);
+  
   if (!matched)
     return res.status(403).json({ msg: "You don't have access rights" });
+
+  next();
+};
+
+exports.verifyCommentship = async (req, res, next) => {
+  const { commentId } = req.params;
+  // verify originally commented user
+  const comments = await User.getAllComments(req.user.id);
+  matched = comments.find((comment) => comment.id === Number(commentId));
+
+  if (!matched)
+    return res.status(403).json({ error: "You don't have access rights" });
+
+  next();
 };
 
 // exports.getProtection = (req, res) => res.send("You're authorized!");

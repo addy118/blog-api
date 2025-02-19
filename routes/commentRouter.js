@@ -4,10 +4,13 @@ const {
   postComment,
   postReply,
   delComment,
+  putComment,
 } = require("../controllers/commentController");
 const commentRouter = Router();
 
 commentRouter.use(verifyToken);
+
+commentRouter.put("/:commentId/edit", putComment);
 
 commentRouter.post("/post/:postId/new", postComment);
 commentRouter.post("/:commentId/post/:postId/reply", postReply);

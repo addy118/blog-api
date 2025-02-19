@@ -165,6 +165,17 @@ class User {
       throw new Error("Failed to fetch following users.");
     }
   }
+
+  static async getAllComments(userId) {
+    try {
+      return await db.comment.findMany({
+        where: { userId },
+      });
+    } catch (err) {
+      console.error("Error fetching comments: ", err.stack);
+      throw new Error("Failed to fetch user comments.");
+    }
+  }
 }
 
 module.exports = User;
