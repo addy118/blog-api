@@ -95,7 +95,10 @@ class Post {
     try {
       return await db.post.findUnique({
         where: { id: postId },
-        include: { author: true, comments: { include: { replies: true } } },
+        include: {
+          author: true,
+          comments: { include: { replies: true } },
+        },
       });
     } catch (error) {
       console.error("Error fetching post by ID:  ", error.stack);
@@ -113,4 +116,4 @@ class Post {
   }
 }
 
-module.exports = { Post };
+module.exports = Post;

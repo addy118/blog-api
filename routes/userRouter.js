@@ -1,5 +1,8 @@
 const { Router } = require("express");
-const { verifyToken } = require("../controllers/authController");
+const {
+  verifyToken,
+  verifyOwnership,
+} = require("../controllers/authController");
 const {
   getUser,
   getUserArchPosts,
@@ -19,21 +22,22 @@ const userRouter = Router();
 
 userRouter.get("/:userId/view", getUser);
 userRouter.get("/:userId/post/:postId/view", getUserPost);
-userRouter.get("/:userId/posts/archived", getUserArchPosts);
 userRouter.get("/:userId/posts", getAllUserPosts);
-
-userRouter.use(verifyToken);
-
 userRouter.get("/:userId/followers", getUserFollowers);
 userRouter.get("/:userId/following", getUserFollowing);
+
+// protect the routes
+userRouter.use("/:userId/*", [verifyToken, verifyOwnership]);
+
+userRouter.get("/:userId/posts/archived", getUserArchPosts);
 
 userRouter.put("/:userId/edit/name", putUserName);
 userRouter.put("/:userId/edit/email", putUserEmail);
 userRouter.put("/:userId/edit/bio", putUserBio);
 userRouter.put("/:userId/edit/password", putUserPass);
 
-userRouter.post("/:userId/follow", postUserFollow);
-userRouter.post("/:userId/unfollow", postUserUnfollow);
+userRouter.post("/:userId/followee/:followeeId/follow", postUserFollow);
+userRouter.post("/:userId/followee/:followeeId/unfollow", postUserUnfollow);
 
 userRouter.delete("/:userId/delete", delUser);
 

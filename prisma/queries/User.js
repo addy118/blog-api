@@ -13,7 +13,7 @@ class User {
     }
   }
 
-  static async editBio(userId, bio) {
+  static async changeBio(userId, bio) {
     try {
       await db.user.update({
         where: { id: userId },
@@ -37,7 +37,7 @@ class User {
     }
   }
 
-  static async editName(userId, name) {
+  static async changeName(userId, name) {
     try {
       await db.user.update({
         where: { id: userId },
@@ -46,6 +46,18 @@ class User {
     } catch (error) {
       console.error("Error updating name:  ", error.stack);
       throw new Error("Failed to update user name.");
+    }
+  }
+
+  static async changePass(userId, password) {
+    try {
+      await db.user.update({
+        where: { id: userId },
+        data: { password },
+      });
+    } catch (error) {
+      console.error("Error updating password:  ", error.stack);
+      throw new Error("Failed to update user password.");
     }
   }
 
@@ -93,6 +105,64 @@ class User {
     } catch (error) {
       console.error("Error deleting user:  ", error.stack);
       throw new Error("Failed to delete user.");
+    }
+  }
+
+  // follower follows followee
+  static async follow(followerId, followeeId) {
+    try {
+      await db.follower.create({
+        data: {
+          followeeId,
+          followerId,
+        },
+      });
+    } catch (error) {
+      console.error("Error following user:  ", error.stack);
+      throw new Error("Failed to follow user.");
+    }
+  }
+
+  static async unfollow(followerId, followeeId) {
+    try {
+      await db.follower.updateMany({
+        where: {
+          followeeId,
+          followerId,
+        },
+        data: {
+          unfollowedAt: new Date().toISOString(),
+        },
+      });
+    } catch (error) {
+      console.error("Error unfollowing user:  ", error.stack);
+      throw new Error("Failed to unfollow user.");
+    }
+  }
+
+  static async getFollowers(userId) {
+    try {
+      return await db.follower.findMany({
+        where: { followeeId: userId, unfollowedAt: null },
+        // bug-prone
+        include: { follower: true },
+      });
+    } catch (error) {
+      console.error("Error fetching followers:  ", error.stack);
+      throw new Error("Failed to fetch followers.");
+    }
+  }
+
+  static async getFollowing(userId) {
+    try {
+      return await db.follower.findMany({
+        where: { followerId: userId, unfollowedAt: null },
+        // bug-prone
+        include: { followee: true },
+      });
+    } catch (error) {
+      console.error("Error fetching following users:  ", error.stack);
+      throw new Error("Failed to fetch following users.");
     }
   }
 }

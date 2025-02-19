@@ -23,7 +23,7 @@ exports.postLogin = async (req, res) => {
   if (!matched) return res.status(400).send("Invalid password!");
 
   // sign token
-  jwt.sign({ user }, SECRET, (err, token) => res.send(token));
+  jwt.sign({ user }, SECRET, (err, token) => res.status(200).send(token));
 };
 
 // verify middleware
@@ -34,11 +34,19 @@ exports.verifyToken = (req, res, next) => {
   if (!authToken) return res.status(500).send("Unauthorized access!");
   req.token = authToken;
 
-  // verify the token and add user to the request
+  // verify the token and add user to the request obj
   jwt.verify(req.token, SECRET, (err, data) => {
     if (err) return res.sendStatus(403);
     req.user = data.user;
   });
+
+  next();
+};
+
+exports.verifyOwnership = (req, res, next) => {
+  const userId = Number(req.params.userId);
+  if (userId !== req.user.id)
+    return res.status(403).json({ msg: "You don't have access rights" });
 
   next();
 };
