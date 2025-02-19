@@ -1,5 +1,8 @@
 const { Router } = require("express");
-const { verifyToken } = require("../controllers/authController");
+const {
+  verifyToken,
+  verifyCommentship,
+} = require("../controllers/authController");
 const {
   postComment,
   postReply,
@@ -10,12 +13,12 @@ const commentRouter = Router();
 
 commentRouter.use(verifyToken);
 
-commentRouter.put("/:commentId/edit", putComment);
+commentRouter.put("/:commentId/edit", verifyCommentship, putComment);
 
 commentRouter.post("/post/:postId/new", postComment);
 commentRouter.post("/:commentId/post/:postId/reply", postReply);
 
-commentRouter.delete("/:commentId/delete", delComment);
+commentRouter.delete("/:commentId/delete", verifyCommentship, delComment);
 
 commentRouter.use((err, req, res, next) => {
   console.error(err.message);

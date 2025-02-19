@@ -53,12 +53,6 @@ exports.delComment = async (req, res) => {
   const { commentId } = req.params;
 
   try {
-    // verify original user
-    const comments = await User.getAllComments(req.user.id);
-    matched = comments.find((comment) => comment.id === Number(commentId));
-    if (!matched)
-      return res.status(403).json({ error: "You don't have access rights" });
-
     // delete comment
     await Comment.delete(Number(commentId));
     res.status(201).json({ msg: "Comment deleted successfully!" });
