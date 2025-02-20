@@ -9,14 +9,22 @@ const {
   delComment,
   putComment,
 } = require("../controllers/commentController");
+const { validateComment } = require("../config/validation/comment");
 const commentRouter = Router();
 
 commentRouter.use(verifyToken);
 
-commentRouter.put("/:commentId/edit", verifyCommentship, putComment);
+commentRouter.put("/:commentId/edit", [
+  verifyCommentship,
+  validateComment,
+  putComment,
+]);
 
-commentRouter.post("/post/:postId/new", postComment);
-commentRouter.post("/:commentId/post/:postId/reply", postReply);
+commentRouter.post("/post/:postId/new", [validateComment, postComment]);
+commentRouter.post("/:commentId/post/:postId/reply", [
+  validateComment,
+  postReply,
+]);
 
 commentRouter.delete("/:commentId/delete", verifyCommentship, delComment);
 
